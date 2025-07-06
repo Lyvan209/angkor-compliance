@@ -1,14 +1,23 @@
 import { useState, useEffect } from 'react'
 import { supabase, signIn, signUp, signOut } from './lib/supabase'
+import { LanguageProvider, useLanguage } from './contexts/LanguageContext'
+import { useTranslations } from './translations'
+import { useLanguageStyles } from './hooks/useLanguageStyles'
 import LoginForm from './components/LoginForm'
 import Dashboard from './components/Dashboard'
+import LandingPage from './components/LandingPage'
 
-function App() {
+// Create a component that uses the language context
+const AppContent = () => {
+  const { language } = useLanguage()
+  const t = useTranslations(language)
+  const { textClass } = useLanguageStyles()
   const [session, setSession] = useState(null)
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [authLoading, setAuthLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [currentView, setCurrentView] = useState('landing') // 'landing', 'login', 'dashboard'
 
   useEffect(() => {
     // Get initial session
@@ -16,6 +25,10 @@ function App() {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
+      // If user is already logged in, show dashboard
+      if (session) {
+        setCurrentView('dashboard')
+      }
     })
 
     // Listen for auth changes
@@ -25,6 +38,12 @@ function App() {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
+      // Update view based on session
+      if (session) {
+        setCurrentView('dashboard')
+      } else {
+        setCurrentView('landing')
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -42,6 +61,7 @@ function App() {
       } else {
         setSession(data.session)
         setUser(data.user)
+        setCurrentView('dashboard')
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -65,6 +85,7 @@ function App() {
         } else {
           setSession(data.session)
           setUser(data.user)
+          setCurrentView('dashboard')
         }
       }
     } catch (err) {
@@ -86,6 +107,7 @@ function App() {
       } else {
         setSession(null)
         setUser(null)
+        setCurrentView('landing')
       }
     } catch (err) {
       setError('An unexpected error occurred')
@@ -94,33 +116,63 @@ function App() {
     }
   }
 
+  const handleNavigateToLogin = () => {
+    setCurrentView('login')
+    setError(null)
+  }
+
+  const handleBackToHome = () => {
+    setCurrentView('landing')
+    setError(null)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className={`text-gray-600 ${textClass}`}>{t.loading}</p>
         </div>
       </div>
     )
   }
 
+  // Show dashboard if user is authenticated
+  if (session && currentView === 'dashboard') {
+    return (
+      <Dashboard
+        user={user}
+        onLogout={handleLogout}
+      />
+    )
+  }
+
+  // Show login page
+  if (currentView === 'login') {
+    return (
+      <LoginForm
+        onLogin={handleLogin}
+        onSignUp={handleSignUp}
+        isLoading={authLoading}
+        error={error}
+        onBackToHome={handleBackToHome}
+      />
+    )
+  }
+
+  // Show landing page by default
   return (
-    <div className="App">
-      {!session ? (
-        <LoginForm
-          onLogin={handleLogin}
-          onSignUp={handleSignUp}
-          isLoading={authLoading}
-          error={error}
-        />
-      ) : (
-        <Dashboard
-          user={user}
-          onLogout={handleLogout}
-        />
-      )}
-    </div>
+    <LandingPage
+      onNavigateToLogin={handleNavigateToLogin}
+    />
+  )
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   )
 }
 

@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react'
 import { LogOut, User, Settings, BarChart3, FileText, Shield } from 'lucide-react'
+import { useLanguage } from '../contexts/LanguageContext'
+import { useTranslations } from '../translations'
+import { useLanguageStyles } from '../hooks/useLanguageStyles'
+import LanguageSwitcher from './LanguageSwitcher'
 
 const Dashboard = ({ user, onLogout }) => {
+  const { language } = useLanguage()
+  const t = useTranslations(language)
+  const { textClass, headerClass } = useLanguageStyles()
   const [currentTime, setCurrentTime] = useState(new Date())
 
   useEffect(() => {
@@ -14,28 +21,46 @@ const Dashboard = ({ user, onLogout }) => {
 
   const stats = [
     {
-      title: 'Total Compliance Reports',
+      title: t.totalComplianceReports,
       value: '24',
       icon: FileText,
       color: 'bg-blue-500'
     },
     {
-      title: 'Security Score',
+      title: t.securityScore,
       value: '95%',
       icon: Shield,
       color: 'bg-green-500'
     },
     {
-      title: 'Active Policies',
+      title: t.activePolicies,
       value: '12',
       icon: BarChart3,
       color: 'bg-purple-500'
     },
     {
-      title: 'Last Audit',
-      value: '2 days ago',
+      title: t.lastAudit,
+      value: `2 ${t.daysAgo}`,
       icon: Settings,
       color: 'bg-orange-500'
+    }
+  ]
+
+  const activities = [
+    {
+      text: t.securityAuditCompleted,
+      time: `2 ${t.hoursAgo}`,
+      color: 'bg-green-500'
+    },
+    {
+      text: t.newCompliancePolicyAdded,
+      time: `1 ${t.dayAgo}`,
+      color: 'bg-blue-500'
+    },
+    {
+      text: t.riskAssessmentUpdated,
+      time: `3 ${t.daysAgo}`,
+      color: 'bg-yellow-500'
     }
   ]
 
@@ -47,28 +72,29 @@ const Dashboard = ({ user, onLogout }) => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <h1 className="text-xl font-bold text-gray-900">Angkor Compliance</h1>
+                <h1 className={`text-xl font-bold text-gray-900 ${headerClass}`}>{t.angkorCompliance}</h1>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-500">
+              <div className={`text-sm text-gray-500 ${textClass}`}>
                 {currentTime.toLocaleTimeString()}
               </div>
+              <LanguageSwitcher variant="compact" />
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
                   <User className="h-5 w-5 text-white" />
                 </div>
                 <div className="text-sm">
-                  <p className="font-medium text-gray-900">{user?.user_metadata?.full_name || 'User'}</p>
-                  <p className="text-gray-500">{user?.email}</p>
+                  <p className={`font-medium text-gray-900 ${textClass}`}>{user?.user_metadata?.full_name || 'User'}</p>
+                  <p className={`text-gray-500 ${textClass}`}>{user?.email}</p>
                 </div>
               </div>
               <button
                 onClick={onLogout}
-                className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                className={`flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 ${textClass}`}
               >
                 <LogOut className="h-4 w-4" />
-                <span>Logout</span>
+                <span>{t.logout}</span>
               </button>
             </div>
           </div>
@@ -79,11 +105,11 @@ const Dashboard = ({ user, onLogout }) => {
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Welcome back, {user?.user_metadata?.full_name || 'User'}!
+            <h2 className={`text-2xl font-bold text-gray-900 mb-2 ${headerClass}`}>
+              {t.welcomeBack}, {user?.user_metadata?.full_name || 'User'}!
             </h2>
-            <p className="text-gray-600">
-              Here's your compliance dashboard overview.
+            <p className={`text-gray-600 ${textClass}`}>
+              {t.dashboardOverview}
             </p>
           </div>
 
@@ -96,8 +122,8 @@ const Dashboard = ({ user, onLogout }) => {
                     <stat.icon className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                    <p className={`text-sm font-medium text-gray-600 ${textClass}`}>{stat.title}</p>
+                    <p className={`text-2xl font-bold text-gray-900 ${headerClass}`}>{stat.value}</p>
                   </div>
                 </div>
               </div>
@@ -106,29 +132,17 @@ const Dashboard = ({ user, onLogout }) => {
 
           {/* Recent Activity */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+            <h3 className={`text-lg font-semibold text-gray-900 mb-4 ${headerClass}`}>{t.recentActivity}</h3>
             <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Security audit completed</p>
-                  <p className="text-xs text-gray-500">2 hours ago</p>
+              {activities.map((activity, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className={`w-2 h-2 ${activity.color} rounded-full`}></div>
+                  <div>
+                    <p className={`text-sm font-medium text-gray-900 ${textClass}`}>{activity.text}</p>
+                    <p className={`text-xs text-gray-500 ${textClass}`}>{activity.time}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900">New compliance policy added</p>
-                  <p className="text-xs text-gray-500">1 day ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Risk assessment updated</p>
-                  <p className="text-xs text-gray-500">3 days ago</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
