@@ -1,5 +1,7 @@
 # Angkor Compliance Login System
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7263cc23-c737-4110-8a5e-bfb697f8c73e/deploy-status)](https://app.netlify.com/projects/resilient-gelato-13a374/deploys)
+
 A modern, responsive login system built with React, Vite, and Supabase authentication.
 
 ## Features
