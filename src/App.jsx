@@ -5,6 +5,8 @@ import { useTranslations } from './translations'
 import { useLanguageStyles } from './hooks/useLanguageStyles'
 import LoginForm from './components/LoginForm'
 import Dashboard from './components/Dashboard'
+import EnhancedDashboard from './components/EnhancedDashboard'
+import ModernDashboard from './components/ModernDashboard'
 import LandingPage from './components/LandingPage'
 
 // Create a component that uses the language context
@@ -140,9 +142,13 @@ const AppContent = () => {
   // Show dashboard if user is authenticated
   if (session && currentView === 'dashboard') {
     return (
-      <Dashboard
+      <ModernDashboard
         user={user}
         onLogout={handleLogout}
+        onNavigate={(view) => {
+          console.log('Navigate to:', view)
+          // Handle navigation to different modules
+        }}
       />
     )
   }

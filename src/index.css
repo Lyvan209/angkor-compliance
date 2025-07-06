@@ -32,6 +32,7 @@
   .text-khmer-header {
     @apply font-khmer-header;
     line-height: 1.4;
+    font-weight: normal !important; /* Ensure headers don't use bold for Khmer fonts */
   }
   
   .text-english {
