@@ -13,14 +13,24 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 // Auth helper functions
 export const signIn = async (email, password) => {
+  console.log('Attempting to sign in with:', email)
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
+  
+  if (error) {
+    console.error('Sign in error:', error)
+  } else {
+    console.log('Sign in successful:', data)
+  }
+  
   return { data, error }
 }
 
 export const signUp = async (email, password, fullName) => {
+  console.log('Attempting to sign up with:', email, fullName)
+  
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -30,6 +40,13 @@ export const signUp = async (email, password, fullName) => {
       }
     }
   })
+  
+  if (error) {
+    console.error('Sign up error:', error)
+  } else {
+    console.log('Sign up successful:', data)
+  }
+  
   return { data, error }
 }
 
