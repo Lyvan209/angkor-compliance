@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { supabase, signIn, signUp, signOut } from './lib/supabase'
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext'
 import { useTranslations } from './translations'
@@ -8,6 +9,7 @@ import Dashboard from './components/Dashboard'
 import EnhancedDashboard from './components/EnhancedDashboard'
 import ModernDashboard from './components/ModernDashboard'
 import LandingPage from './components/LandingPage'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Create a component that uses the language context
 const AppContent = () => {
@@ -146,7 +148,7 @@ const AppContent = () => {
         user={user}
         onLogout={handleLogout}
         onNavigate={(view) => {
-          console.log('Navigate to:', view)
+          // Navigate to view
           // Handle navigation to different modules
         }}
       />
@@ -176,9 +178,13 @@ const AppContent = () => {
 
 function App() {
   return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <div className="App">
+          <AppContent />
+        </div>
+      </LanguageProvider>
+    </ErrorBoundary>
   )
 }
 

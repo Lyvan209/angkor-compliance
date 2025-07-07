@@ -334,6 +334,16 @@ export const usePermissions = (user) => {
   const canEditUser = (targetUser) => {
     if (!user || !targetUser) return false
     
+    const roleMap = {
+      super_admin: { label: 'Super Admin', level: 7, color: 'text-red-600' },
+      admin: { label: 'Admin', level: 6, color: 'text-purple-600' },
+      manager: { label: 'Manager', level: 5, color: 'text-blue-600' },
+      supervisor: { label: 'Supervisor', level: 4, color: 'text-green-600' },
+      auditor: { label: 'Auditor', level: 4, color: 'text-orange-600' },
+      committee_member: { label: 'Committee Member', level: 3, color: 'text-indigo-600' },
+      worker: { label: 'Worker', level: 2, color: 'text-gray-600' }
+    }
+    
     const currentUserLevel = getRoleInfo().level
     const targetUserLevel = roleMap[targetUser.role]?.level || 1
     

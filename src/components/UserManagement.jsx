@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { 
   Users, 
   UserPlus, 
@@ -15,7 +16,8 @@ import {
   Eye,
   EyeOff,
   CheckCircle,
-  XCircle
+  XCircle,
+  AlertTriangle
 } from 'lucide-react'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useTranslations } from '../translations'
@@ -672,6 +674,11 @@ const UserManagement = ({ currentUser, onUserUpdate }) => {
       )}
     </div>
   )
+}
+
+UserManagement.propTypes = {
+  currentUser: PropTypes.object.isRequired,
+  onUserUpdate: PropTypes.func.isRequired
 }
 
 export default UserManagement 

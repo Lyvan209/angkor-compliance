@@ -1,7 +1,9 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { useLanguageStyles } from '../../hooks/useLanguageStyles'
+import PropTypes from 'prop-types'
+import { memo } from 'react'
 
-const StatWidget = ({ 
+const StatWidget = memo(({ 
   title, 
   value, 
   subtitle, 
@@ -90,6 +92,20 @@ const StatWidget = ({
       </div>
     </div>
   )
+})
+
+StatWidget.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  subtitle: PropTypes.string,
+  icon: PropTypes.elementType,
+  color: PropTypes.string,
+  trend: PropTypes.oneOf(['up', 'down', null]),
+  trendValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onClick: PropTypes.func,
+  loading: PropTypes.bool
 }
+
+StatWidget.displayName = 'StatWidget'
 
 export default StatWidget 

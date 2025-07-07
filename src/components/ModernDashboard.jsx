@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { 
   LogOut, 
   User, 
@@ -43,6 +44,9 @@ const ModernDashboard = ({ user, onLogout, onNavigate }) => {
   })
   const [loading, setLoading] = useState(true)
   const [layoutMode, setLayoutMode] = useState('grid') // 'grid' or 'compact'
+  const [currentView, setCurrentView] = useState('overview')
+  const [isLoading, setIsLoading] = useState(false)
+  const [alerts, setAlerts] = useState([])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -366,7 +370,7 @@ const ModernDashboard = ({ user, onLogout, onNavigate }) => {
             onViewAll={() => onNavigate?.('alerts')}
             onDismiss={(alertId) => {
               // Handle alert dismissal
-              console.log('Dismiss alert:', alertId)
+              // Alert dismissed
             }}
           />
           
@@ -421,6 +425,36 @@ const ModernDashboard = ({ user, onLogout, onNavigate }) => {
       </div>
     )
   }
+
+  // Memoized navigation handler
+  const handleNavigate = useCallback((view) => {
+    setCurrentView(view)
+    if (onNavigate) {
+      onNavigate(view)
+    }
+  }, [onNavigate])
+
+  // Memoized logout handler
+  const handleLogout = useCallback(() => {
+    if (onLogout) {
+      onLogout()
+    }
+  }, [onLogout])
+
+  // Memoized alert dismissal
+  const dismissAlert = useCallback((alertId) => {
+    setAlerts(prev => prev.filter(alert => alert.id !== alertId))
+  }, [])
+
+  // Memoized stats computation
+  const dashboardStats = useMemo(() => {
+    return {
+      totalUsers: user?.organization?.user_count || 0,
+      activePermits: user?.organization?.active_permits || 0,
+      pendingGrievances: user?.organization?.pending_grievances || 0,
+      complianceScore: user?.organization?.compliance_score || 0
+    }
+  }, [user])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -481,7 +515,7 @@ const ModernDashboard = ({ user, onLogout, onNavigate }) => {
               </div>
               
               <button
-                onClick={onLogout}
+                onClick={handleLogout}
                 className={`flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 ${textClass}`}
               >
                 <LogOut className="h-4 w-4" />
@@ -523,6 +557,12 @@ const ModernDashboard = ({ user, onLogout, onNavigate }) => {
       </main>
     </div>
   )
+}
+
+ModernDashboard.propTypes = {
+  user: PropTypes.object.isRequired,
+  onLogout: PropTypes.func.isRequired,
+  onNavigate: PropTypes.func.isRequired
 }
 
 export default ModernDashboard 

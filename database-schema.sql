@@ -171,6 +171,24 @@ CREATE TABLE user_permissions (
     granted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- User security
+CREATE TABLE user_security (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    login_attempts INTEGER DEFAULT 0,
+    locked_until TIMESTAMP WITH TIME ZONE,
+    last_successful_login TIMESTAMP WITH TIME ZONE,
+    last_failed_login TIMESTAMP WITH TIME ZONE,
+    password_changed_at TIMESTAMP WITH TIME ZONE,
+    mfa_enabled BOOLEAN DEFAULT FALSE,
+    mfa_secret TEXT,
+    backup_codes TEXT[],
+    security_questions JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- ==========================================
 -- PERMITS & CERTIFICATES
 -- ==========================================
@@ -550,6 +568,11 @@ CREATE INDEX idx_users_organization_id ON users(organization_id);
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_role ON users(role);
 
+-- User security
+CREATE INDEX idx_user_security_user_id ON user_security(user_id);
+CREATE INDEX idx_user_security_email ON user_security(email);
+CREATE INDEX idx_user_security_locked_until ON user_security(locked_until);
+
 -- Permits
 CREATE INDEX idx_permits_organization_id ON permits(organization_id);
 CREATE INDEX idx_permits_expiry_date ON permits(expiry_date);
@@ -604,6 +627,7 @@ $$ language 'plpgsql';
 -- Apply updated_at triggers to all tables that have updated_at column
 CREATE TRIGGER update_organizations_updated_at BEFORE UPDATE ON organizations FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+CREATE TRIGGER update_user_security_updated_at BEFORE UPDATE ON user_security FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_permits_updated_at BEFORE UPDATE ON permits FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_audits_updated_at BEFORE UPDATE ON audits FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 CREATE TRIGGER update_caps_updated_at BEFORE UPDATE ON caps FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();

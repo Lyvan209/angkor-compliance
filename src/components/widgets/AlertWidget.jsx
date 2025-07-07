@@ -1,7 +1,9 @@
 import { AlertTriangle, CheckCircle, Info, XCircle, Clock, X } from 'lucide-react'
 import { useLanguageStyles } from '../../hooks/useLanguageStyles'
+import PropTypes from 'prop-types'
+import { memo } from 'react'
 
-const AlertWidget = ({ 
+const AlertWidget = memo(({ 
   alerts = [], 
   title = 'Alerts & Notifications',
   maxItems = 5,
@@ -177,6 +179,13 @@ const AlertWidget = ({
       )}
     </div>
   )
+})
+
+AlertWidget.propTypes = {
+  alerts: PropTypes.array,
+  onDismiss: PropTypes.func.isRequired
 }
+
+AlertWidget.displayName = 'AlertWidget'
 
 export default AlertWidget 

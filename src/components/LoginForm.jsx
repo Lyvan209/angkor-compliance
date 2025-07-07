@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 import { Eye, EyeOff, Mail, Lock, User, AlertCircle, ArrowLeft } from 'lucide-react'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useTranslations } from '../translations'
@@ -238,7 +239,7 @@ const LoginForm = ({ onLogin, onSignUp, isLoading, error, onBackToHome }) => {
                   className={`text-sm text-primary-600 hover:text-primary-500 transition-colors ${textClass}`}
                   onClick={() => {
                     // Handle forgot password
-                    console.log('Forgot password clicked')
+                    // Handle forgot password logic
                   }}
                 >
                   {t.forgotPassword}
@@ -263,6 +264,14 @@ const LoginForm = ({ onLogin, onSignUp, isLoading, error, onBackToHome }) => {
       </div>
     </div>
   )
+}
+
+LoginForm.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+  onSignUp: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  onBackToHome: PropTypes.func
 }
 
 export default LoginForm 
