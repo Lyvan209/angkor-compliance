@@ -1,7 +1,5 @@
 # Netlify Configuration for Static Site with Functions
 [build]
-  command = "echo 'Skipping build for static site'"
-  functions = "netlify/functions"
   publish = "."
   
 # Skip build processing
@@ -11,6 +9,7 @@
 # Ignore package.json build scripts
 [build.environment]
   SKIP_BUILD = "true"
+  NODE_VERSION = "18"
   
 [[redirects]]
   from = "/api/auth/*"
@@ -28,6 +27,7 @@
   status = 200
 
 [functions]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
   
 [[headers]]
