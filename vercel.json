@@ -26,9 +26,7 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production",
-    "SUPABASE_URL": "https://skqxzsrajcdmkbxembrs.supabase.co",
-    "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrcXh6c3JhamNkbWtieGVtYnJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NDMzODAsImV4cCI6MjA2NzIxOTM4MH0.Jdbgnse0y4c1KzRhf4ehtNYZq4tSLqD-nw_D7CmTfq8"
+    "NODE_ENV": "production"
   },
   "functions": {
     "server.js": {
@@ -41,4 +39,4 @@
       "destination": "/index.html"
     }
   ]
-} 
+}
