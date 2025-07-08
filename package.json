@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "npm run build:css && npm run build:js",
     "build:css": "postcss styles.css -o dist/styles.min.css",
     "build:js": "terser script.js -o dist/script.min.js",
     "serve": "serve -s . -l 3000",
