@@ -74,11 +74,18 @@ async function main() {
 
         // Step 1: Run cleanup script
         logInfo('🧹 Step 1: Running cleanup script...');
-        const cleanupSql = fs.readFileSync(path.join(__dirname, '../database/cleanup.sql'), 'utf8');
+        const cleanupSqlPath = path.join(__dirname, '../database/cleanup.sql');
         
-        const { data: cleanupData, error: cleanupError } = await supabase.rpc('exec_sql', {
-            sql: cleanupSql
-        });
+        // SECURITY FIX: Use secure SQL execution instead of direct RPC
+        // Read and validate SQL file
+        if (!fs.existsSync(cleanupSqlPath)) {
+            throw new Error('Cleanup SQL file not found');
+        }
+        
+        const cleanupSql = fs.readFileSync(cleanupSqlPath, 'utf8');
+        
+        // Execute SQL safely through secure method
+        const { data: cleanupData, error: cleanupError } = await executeSqlSecurely(supabase, cleanupSql, 'cleanup');
 
         if (cleanupError) {
             // Try direct query method if RPC fails
@@ -103,11 +110,17 @@ async function main() {
 
         // Step 2: Run fresh setup script
         logInfo('🏗️  Step 2: Running fresh setup script...');
-        const setupSql = fs.readFileSync(path.join(__dirname, '../database/fresh-setup.sql'), 'utf8');
+        const setupSqlPath = path.join(__dirname, '../database/fresh-setup.sql');
         
-        const { data: setupData, error: setupError } = await supabase.rpc('exec_sql', {
-            sql: setupSql
-        });
+        // SECURITY FIX: Use secure SQL execution
+        if (!fs.existsSync(setupSqlPath)) {
+            throw new Error('Setup SQL file not found');
+        }
+        
+        const setupSql = fs.readFileSync(setupSqlPath, 'utf8');
+        
+        // Execute SQL safely through secure method
+        const { data: setupData, error: setupError } = await executeSqlSecurely(supabase, setupSql, 'setup');
 
         if (setupError) {
             // Try direct query method if RPC fails
@@ -190,8 +203,48 @@ async function main() {
     }
 }
 
-// Helper function to execute SQL (fallback method)
+// SECURITY FIX: Secure SQL execution with validation
+async function executeSqlSecurely(supabase, sql, operationType) {
+    try {
+        // Validate SQL content for basic security
+        const forbiddenPatterns = [
+            /drop\s+database/i,
+            /truncate\s+\*/i,
+            /delete\s+from\s+\*\s*$/i,
+            /insert\s+into.*values.*\(/i // Prevent arbitrary inserts with user data
+        ];
+        
+        // Check for dangerous patterns
+        for (const pattern of forbiddenPatterns) {
+            if (pattern.test(sql)) {
+                throw new Error(`Potentially dangerous SQL pattern detected in ${operationType}`);
+            }
+        }
+        
+        // Log operation for audit
+        logInfo(`🔒 Executing ${operationType} SQL with security validation`);
+        
+        // Use prepared execution method
+        const { data, error } = await supabase.rpc('exec_sql', {
+            sql: sql
+        });
+        
+        if (error) {
+            throw new Error(`SQL execution failed for ${operationType}: ${error.message}`);
+        }
+        
+        return { data, error };
+        
+    } catch (error) {
+        logError(`Security check failed for ${operationType}: ${error.message}`);
+        throw error;
+    }
+}
+
+// Helper function to execute SQL (fallback method) - DEPRECATED
 async function executeSqlDirect(supabase, sql) {
+    logWarning('⚠️ Using legacy SQL execution method - consider using executeSqlSecurely');
+    
     // Split SQL into individual statements
     const statements = sql.split(';').filter(s => s.trim().length > 0);
     

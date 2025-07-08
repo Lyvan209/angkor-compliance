@@ -20,14 +20,26 @@ const logger = winston.createLogger({
     ]
 });
 
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL || 'https://skqxzsrajcdmkbxembrs.supabase.co';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrcXh6c3JhamNkbWtieGVtYnJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NDMzODAsImV4cCI6MjA2NzIxOTM4MH0.Jdbgnse0y4c1KzRhf4ehtNYZq4tSLqD-nw_D7CmTfq8';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrcXh6c3JhamNkbWtieGVtYnJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTY0MzM4MCwiZXhwIjoyMDY3MjE5MzgwfQ.eiGMoTJqpHTgp9W6gy06kNyGU0uNKePxJiepXEIzTF8';
+// Supabase configuration - SECURITY FIX: No hardcoded secrets
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// SECURITY FIX: Enhanced environment variable validation
 if (!supabaseUrl || !supabaseAnonKey) {
-    logger.error('Missing required Supabase environment variables');
-    throw new Error('Supabase configuration is incomplete');
+    if (process.env.NODE_ENV === 'test' || process.argv.includes('--syntax-check')) {
+        console.warn('⚠️ Supabase configuration missing - running in test mode');
+        module.exports = { databaseService: null, supabaseClient: null };
+        return;
+    }
+    
+    logger.error('❌ CRITICAL: Missing required environment variables:');
+    if (!supabaseUrl) logger.error('  - SUPABASE_URL');
+    if (!supabaseAnonKey) logger.error('  - SUPABASE_ANON_KEY');
+    logger.error('\n📝 Please check your .env file or environment configuration');
+    logger.error('🔧 See setup-environment.sh for help configuring variables');
+    
+    throw new Error('Supabase configuration is incomplete - check environment variables');
 }
 
 // Client for public operations (frontend)

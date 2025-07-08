@@ -453,7 +453,19 @@ router.get('/status', (req, res) => {
 
 // Dashboard API endpoints
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'UXXZIp4AZ/oP08ms2DWlv8/nQ9FtqrJBhOyzMtL7BHEZkSMlm6gv/J+e4G/OXmhUcX4MhWU9fYG1OE6XjPrP1A==';
+
+// SECURITY FIX: Require JWT_SECRET environment variable
+let JWT_SECRET;
+if (!process.env.JWT_SECRET) {
+    if (process.env.NODE_ENV === 'test' || process.argv.includes('--syntax-check')) {
+        console.warn('⚠️ JWT_SECRET missing - using test mode');
+        JWT_SECRET = 'test-secret-key-for-syntax-check-only';
+    } else {
+        throw new Error('JWT_SECRET environment variable is required');
+    }
+} else {
+    JWT_SECRET = process.env.JWT_SECRET;
+}
 
 // Authentication middleware
 function authenticateToken(req, res, next) {

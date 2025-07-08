@@ -22,7 +22,7 @@ function generateAccessToken(user) {
 }
 
 exports.handler = async (event, context) => {
-    // CORS headers
+    // Enhanced CORS headers
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
@@ -40,17 +40,51 @@ exports.handler = async (event, context) => {
     }
 
     try {
-        const path = event.path.replace('/.netlify/functions/auth', '');
+        // Enhanced path handling - check both path and query parameters
+        let path = event.path.replace('/.netlify/functions/auth', '');
+        
+        // Handle query parameter routing (from redirects)
+        if (event.queryStringParameters && event.queryStringParameters.path) {
+            path = event.queryStringParameters.path;
+        }
+        
+        // Default to login if no path specified
+        if (!path || path === '/') {
+            path = '/login';
+        }
+
         const method = event.httpMethod;
         
+        // Enhanced logging
+        console.log('Auth function called:', {
+            path,
+            method,
+            originalPath: event.path,
+            query: event.queryStringParameters,
+            hasBody: !!event.body
+        });
+
         // Parse body if present
         let body = {};
         if (event.body) {
-            body = JSON.parse(event.body);
+            try {
+                body = JSON.parse(event.body);
+            } catch (e) {
+                console.error('Body parsing error:', e);
+                return {
+                    statusCode: 400,
+                    headers,
+                    body: JSON.stringify({ 
+                        error: 'Invalid JSON in request body'
+                    })
+                };
+            }
         }
 
         // Login endpoint
         if (path === '/login' && method === 'POST') {
+            console.log('Processing login request');
+            
             const { email, password, remember } = body;
             
             if (!email || !password) {
@@ -69,6 +103,7 @@ exports.handler = async (event, context) => {
             });
             
             if (error) {
+                console.error('Supabase login error:', error);
                 return {
                     statusCode: 401,
                     headers,
@@ -80,6 +115,8 @@ exports.handler = async (event, context) => {
             
             // Generate JWT token
             const accessToken = generateAccessToken(data.user);
+            
+            console.log('Login successful for:', email);
             
             return {
                 statusCode: 200,
@@ -100,6 +137,8 @@ exports.handler = async (event, context) => {
 
         // Register endpoint
         if (path === '/register' && method === 'POST') {
+            console.log('Processing register request');
+            
             const { name, email, company, password } = body;
             
             // Basic validation
@@ -126,6 +165,7 @@ exports.handler = async (event, context) => {
             });
             
             if (error) {
+                console.error('Supabase register error:', error);
                 return {
                     statusCode: 500,
                     headers,
@@ -134,6 +174,8 @@ exports.handler = async (event, context) => {
                     })
                 };
             }
+            
+            console.log('Registration successful for:', email);
             
             return {
                 statusCode: 201,
@@ -151,6 +193,47 @@ exports.handler = async (event, context) => {
             };
         }
 
+        // Token validation endpoint
+        if (path === '/validate' && method === 'POST') {
+            console.log('Processing token validation');
+            
+            const authHeader = event.headers.authorization || event.headers.Authorization;
+            const token = authHeader && authHeader.split(' ')[1];
+
+            if (!token) {
+                return {
+                    statusCode: 401,
+                    headers,
+                    body: JSON.stringify({ 
+                        valid: false,
+                        message: 'Access token required' 
+                    })
+                };
+            }
+
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                return {
+                    statusCode: 200,
+                    headers,
+                    body: JSON.stringify({ 
+                        valid: true,
+                        user: decoded
+                    })
+                };
+            } catch (error) {
+                console.error('Token validation error:', error);
+                return {
+                    statusCode: 403,
+                    headers,
+                    body: JSON.stringify({ 
+                        valid: false,
+                        message: 'Invalid or expired token' 
+                    })
+                };
+            }
+        }
+
         // Health check
         if (path === '/health' && method === 'GET') {
             return {
@@ -159,12 +242,17 @@ exports.handler = async (event, context) => {
                 body: JSON.stringify({ 
                     status: 'healthy', 
                     timestamp: new Date().toISOString(),
-                    environment: process.env.NODE_ENV || 'development'
+                    environment: process.env.NODE_ENV || 'development',
+                    supabase: {
+                        url: process.env.SUPABASE_URL ? 'configured' : 'missing',
+                        key: process.env.SUPABASE_ANON_KEY ? 'configured' : 'missing'
+                    }
                 })
             };
         }
 
         // 404 for unmatched routes
+        console.error('Route not found:', { path, method });
         return {
             statusCode: 404,
             headers,
@@ -172,7 +260,11 @@ exports.handler = async (event, context) => {
                 error: 'Not found',
                 message: 'API endpoint not found',
                 path: path,
-                method: method
+                method: method,
+                debug: {
+                    originalPath: event.path,
+                    queryParams: event.queryStringParameters
+                }
             })
         };
 
@@ -183,7 +275,8 @@ exports.handler = async (event, context) => {
             headers,
             body: JSON.stringify({ 
                 error: 'Internal server error',
-                message: error.message
+                message: error.message,
+                timestamp: new Date().toISOString()
             })
         };
     }

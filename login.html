@@ -733,8 +733,8 @@
 
         // Form Validation
         function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+            const re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            return re.test(email) && !email.includes('..') && email.length <= 254;
         }
 
         function validatePassword(password) {
@@ -806,6 +806,8 @@
             showLoading();
 
             try {
+                console.log('Attempting login to:', '/api/auth/login');
+                
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
@@ -818,7 +820,24 @@
                     }),
                 });
 
-                const data = await response.json();
+                console.log('Login response status:', response.status);
+                console.log('Login response headers:', Object.fromEntries(response.headers.entries()));
+
+                let data;
+                try {
+                    data = await response.json();
+                    console.log('Login response data:', data);
+                } catch (parseError) {
+                    console.error('Failed to parse response JSON:', parseError);
+                    const responseText = await response.text();
+                    console.error('Raw response:', responseText);
+                    
+                    hideLoading();
+                    showError('loginPasswordError', currentLanguage === 'en' 
+                        ? 'Server error: Invalid response format' 
+                        : 'បញ្ហាម៉ាស៊ីនមេ: ទម្រង់ចម្លើយមិនត្រឹមត្រូវ');
+                    return;
+                }
 
                 if (response.ok) {
                     showSuccess(currentLanguage === 'en' ? 'Login successful! Redirecting...' : 'ចូលគណនីបានជោគជ័យ! កំពុងបញ្ជូនបន្ត...');
@@ -832,11 +851,49 @@
                     }, 2000);
                 } else {
                     hideLoading();
-                    showError('loginPasswordError', data.message || (currentLanguage === 'en' ? 'Invalid email or password' : 'អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ'));
+                    
+                    // Enhanced error handling with more specific messages
+                    let errorMessage = data.message || data.error || 'Unknown error';
+                    
+                    if (response.status === 404) {
+                        errorMessage = currentLanguage === 'en' 
+                            ? 'Login service not available. Please contact support.' 
+                            : 'សេវាកម្មចូលគណនីមិនអាចប្រើបាន។ សូមទាក់ទងផ្នែកជំនួយ។';
+                        
+                        // Log debug information for 404 errors
+                        console.error('404 Error Details:', {
+                            url: '/api/auth/login',
+                            status: response.status,
+                            data: data
+                        });
+                    } else if (response.status === 401) {
+                        errorMessage = currentLanguage === 'en' 
+                            ? 'Invalid email or password' 
+                            : 'អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ';
+                    } else if (response.status >= 500) {
+                        errorMessage = currentLanguage === 'en' 
+                            ? 'Server error. Please try again later.' 
+                            : 'បញ្ហាម៉ាស៊ីនមេ។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។';
+                    }
+                    
+                    showError('loginPasswordError', errorMessage);
                 }
             } catch (error) {
+                console.error('Login network error:', error);
                 hideLoading();
-                showError('loginPasswordError', currentLanguage === 'en' ? 'Connection error. Please try again.' : 'បញ្ហាការតភ្ជាប់។ សូមព្យាយាមម្តងទៀត។');
+                
+                let errorMessage;
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    errorMessage = currentLanguage === 'en' 
+                        ? 'Cannot connect to server. Please check your internet connection.' 
+                        : 'មិនអាចតភ្ជាប់ទៅម៉ាស៊ីនមេ។ សូមពិនិត្យការតភ្ជាប់អ៊ីនធឺណិត។';
+                } else {
+                    errorMessage = currentLanguage === 'en' 
+                        ? 'Connection error. Please try again.' 
+                        : 'បញ្ហាការតភ្ជាប់។ សូមព្យាយាមម្តងទៀត។';
+                }
+                
+                showError('loginPasswordError', errorMessage);
             }
         });
 

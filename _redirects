@@ -1,0 +1,12 @@
+# Netlify Redirects for Angkor Compliance
+# Authentication endpoints
+/api/auth/login    /.netlify/functions/auth?path=/login    200
+/api/auth/register /.netlify/functions/auth?path=/register 200
+/api/auth/validate /.netlify/functions/auth?path=/validate 200
+/api/auth/health   /.netlify/functions/auth?path=/health   200
+
+# Fallback for other API calls
+/api/*             /.netlify/functions/server             200
+
+# SPA routing - must be last
+/*                 /index.html                            200 

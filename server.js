@@ -16,6 +16,16 @@ const nodemailer = require('nodemailer');
 const winston = require('winston');
 const cron = require('node-cron');
 const { databaseService, supabaseClient } = require('./config/database');
+
+// SECURITY FIX: Import validation middleware
+const {
+    sanitizeRequestBody,
+    validateRequestHeaders,
+    validateQueryParams,
+    preventXSS,
+    authValidation
+} = require('./middleware/validation');
+
 require('dotenv').config();
 
 // Initialize Express app
@@ -159,8 +169,18 @@ app.use('/api', require('./routes/api'));
 // Authentication endpoints
 const jwt = require('jsonwebtoken');
 
-// JWT helper functions
-const JWT_SECRET = process.env.JWT_SECRET || 'UXXZIp4AZ/oP08ms2DWlv8/nQ9FtqrJBhOyzMtL7BHEZkSMlm6gv/J+e4G/OXmhUcX4MhWU9fYG1OE6XjPrP1A==';
+// JWT helper functions - SECURITY FIX: No hardcoded fallbacks
+if (!process.env.JWT_SECRET) {
+    if (process.env.NODE_ENV === 'test' || process.argv.includes('--syntax-check')) {
+        console.warn('⚠️ JWT_SECRET missing - using test mode');
+        var JWT_SECRET = 'test-secret-key-for-syntax-check-only';
+    } else {
+        logger.error('JWT_SECRET environment variable is required for security');
+        throw new Error('JWT_SECRET environment variable is required');
+    }
+} else {
+    var JWT_SECRET = process.env.JWT_SECRET;
+}
 
 function generateAccessToken(user) {
     return jwt.sign(
@@ -711,12 +731,48 @@ app.use('*', (req, res) => {
 });
 
 // Error handling middleware
+// SECURITY FIX: Secure global error handler
 app.use((err, req, res, next) => {
-    logger.error('Unhandled error:', err);
-    res.status(500).json({ 
+    // Log error with sanitized information
+    const sanitizedError = {
+        message: err.message,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+        timestamp: new Date().toISOString(),
+        path: req.path,
+        method: req.method,
+        ip: req.ip
+    };
+    
+    logger.error('Application error:', sanitizedError);
+    
+    if (res.headersSent) {
+        return next(err);
+    }
+    
+    // SECURITY: Never expose internal error details in production
+    const isProduction = process.env.NODE_ENV === 'production';
+    const errorResponse = {
         error: 'Internal server error',
-        message: isDevelopment ? err.message : 'Something went wrong'
-    });
+        timestamp: new Date().toISOString(),
+        requestId: req.headers['x-request-id'] || 'unknown'
+    };
+    
+    // Only include detailed error info in development
+    if (!isProduction) {
+        errorResponse.message = err.message;
+        errorResponse.details = err.stack;
+    }
+    
+    // Don't expose sensitive information
+    if (err.message && err.message.includes('JWT_SECRET')) {
+        errorResponse.message = 'Authentication configuration error';
+    }
+    
+    if (err.message && err.message.includes('SUPABASE')) {
+        errorResponse.message = 'Database configuration error';
+    }
+    
+    res.status(err.status || 500).json(errorResponse);
 });
 
 // Email configuration
