@@ -25,10 +25,10 @@ Since CLI had network issues, use the web interface:
 5. **Configure Environment Variables** in Vercel dashboard:
    ```
    NODE_ENV=production
-   SUPABASE_URL=https://skqxzsrajcdmkbxembrs.supabase.co
-   SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrcXh6c3JhamNkbWtieGVtYnJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NDMzODAsImV4cCI6MjA2NzIxOTM4MH0.Jdbgnse0y4c1KzRhf4ehtNYZq4tSLqD-nw_D7CmTfq8
-   SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrcXh6c3JhamNkbWtieGVtYnJzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTY0MzM4MCwiZXhwIjoyMDY3MjE5MzgwfQ.eiGMoTJqpHTgp9W6gy06kNyGU0uNKePxJiepXEIzTF8
-   JWT_SECRET=UXXZIp4AZ/oP08ms2DWlv8/nQ9FtqrJBhOyzMtL7BHEZkSMlm6gv/J+e4G/OXmhUcX4MhWU9fYG1OE6XjPrP1A==
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_ANON_KEY=your-anon-key-here
+   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+   JWT_SECRET=your-256-bit-jwt-secret-here
    ```
 6. **Deploy** - Your site will be live in minutes!
 7. **Configure custom domain** www.angkorcompliance.com in settings

@@ -842,8 +842,7 @@
                 if (response.ok) {
                     showSuccess(currentLanguage === 'en' ? 'Login successful! Redirecting...' : 'ចូលគណនីបានជោគជ័យ! កំពុងបញ្ជូនបន្ត...');
                     
-                    // Store authentication token
-                    localStorage.setItem('angkor_token', data.token);
+                    // Authentication successful - token stored in httpOnly cookie
                     
                     // Redirect to dashboard
                     setTimeout(() => {
@@ -989,29 +988,20 @@
             window.location.href = '/api/auth/microsoft';
         });
 
-        // Check if user is already logged in
-        const token = localStorage.getItem('angkor_token');
-        if (token) {
-            // Validate token and redirect if valid
-            fetch('/api/auth/validate', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.valid) {
-                    window.location.href = '/dashboard.html';
-                } else {
-                    localStorage.removeItem('angkor_token');
-                }
-            })
-            .catch(() => {
-                localStorage.removeItem('angkor_token');
-            });
-        }
+        // Check if user is already logged in via session
+        fetch('/api/auth/validate', {
+            method: 'GET',
+            credentials: 'include' // Include cookies
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                window.location.href = '/dashboard.html';
+            }
+        })
+        .catch(() => {
+            // Session invalid or expired
+        });
 
         // Analytics
         function trackEvent(eventName, properties = {}) {
