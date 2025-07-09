@@ -1,0 +1,15 @@
+NETLIFY ENVIRONMENT VARIABLES
+=============================
+
+Variable 1:
+Key: VITE_SUPABASE_URL
+Value: https://zubdmedwbqjxvzsucsah.supabase.co
+
+Variable 2:
+Key: VITE_SUPABASE_ANON_KEY
+Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1YmRtZWR3YnFqeHZ6c3Vjc2FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMDY4MTIsImV4cCI6MjA2NzU4MjgxMn0.nqH0OreeVQDZ_TLwCGPcwJEasWOnt2YVyiKOZUu0y2s
+
+IMPORTANT: 
+- Add both variables exactly as shown above
+- Make sure there are no extra spaces
+- Select all deployment contexts (Production, Preview, Branch deploys)

@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Angkor Compliance</title>
+    <meta name="description" content="Login to Angkor Compliance - Cambodian garment factory compliance management system">
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --secondary-gold: #b8941f;
+            --accent-gold: #cd853f;
+            --light-gold: #f5e6a3;
+            --dark-gold: #8b7355;
+            --white: #ffffff;
+            --dark-gray: #2c3e50;
+            --light-gray: #f8f9fa;
+            --border-light: #e9ecef;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--secondary-gold) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('angkor-bg.jpg') center/cover;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-hover);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .auth-visual {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--secondary-gold) 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .auth-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('angkor-bg.jpg') center/cover;
+            opacity: 0.2;
+            z-index: 1;
+        }
+
+        .auth-visual-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .auth-visual h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .auth-visual p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .auth-visual .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .auth-form {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            color: var(--primary-gold);
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .auth-header p {
+            color: var(--dark-gray);
+            font-size: 1.1em;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .language-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: var(--light-gray);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            color: var(--dark-gray);
+        }
+
+        .form-tab.active {
+            background: var(--primary-gold);
+            color: var(--white);
+        }
+
+        .form-tab:hover:not(.active) {
+            background: var(--border-light);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-gray);
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 1em;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-group input:invalid {
+            border-color: #dc3545;
+        }
+
+        .form-group .input-icon {
+            position: relative;
+        }
+
+        .form-group .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gold);
+        }
+
+        .form-group .input-icon input {
+            padding-left: 50px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--dark-gold);
+            transition: var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-gold);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .forgot-password {
+            color: var(--primary-gold);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .forgot-password:hover {
+            color: var(--secondary-gold);
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--secondary-gold) 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            color: var(--dark-gray);
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-light);
+        }
+
+        .divider span {
+            background: var(--white);
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            background: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary-gold);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading .spinner {
+            border: 3px solid var(--border-light);
+            border-top: 3px solid var(--primary-gold);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Khmer font for Khmer text */
+        [lang="km"] {
+            font-family: 'Noto Sans Khmer', sans-serif;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .auth-visual {
+                padding: 30px;
+                min-height: 250px;
+            }
+
+            .auth-visual h2 {
+                font-size: 2em;
+            }
+
+            .auth-visual p {
+                font-size: 1em;
+            }
+
+            .auth-form {
+                padding: 30px;
+            }
+
+            .language-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+            }
+
+            .auth-form {
+                padding: 20px;
+            }
+
+            .auth-visual {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-visual">
+            <button class="language-toggle" id="languageToggle">
+                <i class="fas fa-language"></i>
+                <span data-en="ភាសាខ្មែរ" data-km="English">ភាសាខ្មែរ</span>
+            </button>
+            
+            <div class="auth-visual-content">
+                <img src="logo.png" alt="Angkor Compliance" class="logo">
+                <h2 data-en="Welcome Back" data-km="សូមស្វាគមន៍">សូមស្វាគមន៍</h2>
+                <p data-en="Access your compliance management dashboard and keep your garment factory operations running smoothly." data-km="ចូលទៅកាន់ផ្ទាំងគ្រប់គ្រងការអនុលោមរបស់អ្នក និងរក្សាប្រតិបត្តិការរោងចក្រកាត់ដេររបស់អ្នកឱ្យដំណើរការបានរលូន។">ចូលទៅកាន់ផ្ទាំងគ្រប់គ្រងការអនុលោមរបស់អ្នក និងរក្សាប្រតិបត្តិការរោងចក្រកាត់ដេររបស់អ្នកឱ្យដំណើរការបានរលូន។</p>
+            </div>
+        </div>
+
+        <div class="auth-form">
+            <div class="auth-header">
+                <h1 data-en="Sign In" data-km="ចូលគណនី">ចូលគណនី</h1>
+                <p data-en="Enter your credentials to access your account" data-km="បញ្ចូលព័ត៌មានសម្គាល់របស់អ្នកដើម្បីចូលទៅកាន់គណនី">បញ្ចូលព័ត៌មានសម្គាល់របស់អ្នកដើម្បីចូលទៅកាន់គណនី</p>
+            </div>
+
+            <div class="form-tabs">
+                <button class="form-tab active" id="loginTab" data-en="Sign In" data-km="ចូលគណនី">ចូលគណនី</button>
+                <button class="form-tab" id="registerTab" data-en="Register" data-km="ចុះឈ្មោះ">ចុះឈ្មោះ</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form-content">
+                <div class="form-group">
+                    <label data-en="Email Address" data-km="អាសយដ្ឋានអ៊ីមែល">អាសយដ្ឋានអ៊ីមែល</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" required 
+                               data-en-placeholder="Enter your email" 
+                               data-km-placeholder="បញ្ចូលអ៊ីមែលរបស់អ្នក"
+                               placeholder="បញ្ចូលអ៊ីមែលរបស់អ្នក">
+                    </div>
+                    <div class="error-message" id="loginEmailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Password" data-km="ពាក្យសម្ងាត់">ពាក្យសម្ងាត់</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" required 
+                               data-en-placeholder="Enter your password" 
+                               data-km-placeholder="បញ្ចូលពាក្យសម្ងាត់"
+                               placeholder="បញ្ចូលពាក្យសម្ងាត់">
+                        <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
+                    </div>
+                    <div class="error-message" id="loginPasswordError"></div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span data-en="Remember me" data-km="ចងចាំខ្ញុំ">ចងចាំខ្ញុំ</span>
+                    </label>
+                    <a href="#" class="forgot-password" data-en="Forgot Password?" data-km="ភ្លេចពាក្យសម្ងាត់?">ភ្លេចពាក្យសម្ងាត់?</a>
+                </div>
+
+                <button type="submit" class="submit-btn" id="loginSubmit" data-en="Sign In" data-km="ចូលគណនី">ចូលគណនី</button>
+
+                <div class="divider">
+                    <span data-en="Or continue with" data-km="ឬបន្តជាមួយ">ឬបន្តជាមួយ</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn" id="googleLogin">
+                        <i class="fab fa-google"></i>
+                        <span data-en="Google" data-km="Google">Google</span>
+                    </button>
+                    <button type="button" class="social-btn" id="microsoftLogin">
+                        <i class="fab fa-microsoft"></i>
+                        <span data-en="Microsoft" data-km="Microsoft">Microsoft</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form-content hidden">
+                <div class="form-group">
+                    <label data-en="Full Name" data-km="ឈ្មោះពេញ">ឈ្មោះពេញ</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="registerName" required 
+                               data-en-placeholder="Enter your full name" 
+                               data-km-placeholder="បញ្ចូលឈ្មោះពេញ"
+                               placeholder="បញ្ចូលឈ្មោះពេញ">
+                    </div>
+                    <div class="error-message" id="registerNameError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Email Address" data-km="អាសយដ្ឋានអ៊ីមែល">អាសយដ្ឋានអ៊ីមែល</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="registerEmail" required 
+                               data-en-placeholder="Enter your email" 
+                               data-km-placeholder="បញ្ចូលអ៊ីមែលរបស់អ្នក"
+                               placeholder="បញ្ចូលអ៊ីមែលរបស់អ្នក">
+                    </div>
+                    <div class="error-message" id="registerEmailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Company Name" data-km="ឈ្មោះក្រុមហ៊ុន">ឈ្មោះក្រុមហ៊ុន</label>
+                    <div class="input-icon">
+                        <i class="fas fa-building"></i>
+                        <input type="text" id="registerCompany" required 
+                               data-en-placeholder="Enter your company name" 
+                               data-km-placeholder="បញ្ចូលឈ្មោះក្រុមហ៊ុន"
+                               placeholder="បញ្ចូលឈ្មោះក្រុមហ៊ុន">
+                    </div>
+                    <div class="error-message" id="registerCompanyError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Password" data-km="ពាក្យសម្ងាត់">ពាក្យសម្ងាត់</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="registerPassword" required 
+                               data-en-placeholder="Create a password" 
+                               data-km-placeholder="បង្កើតពាក្យសម្ងាត់"
+                               placeholder="បង្កើតពាក្យសម្ងាត់">
+                        <i class="fas fa-eye password-toggle" id="toggleRegisterPassword"></i>
+                    </div>
+                    <div class="error-message" id="registerPasswordError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Confirm Password" data-km="បញ្ជាក់ពាក្យសម្ងាត់">បញ្ជាក់ពាក្យសម្ងាត់</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="registerConfirmPassword" required 
+                               data-en-placeholder="Confirm your password" 
+                               data-km-placeholder="បញ្ជាក់ពាក្យសម្ងាត់"
+                               placeholder="បញ្ជាក់ពាក្យសម្ងាត់">
+                        <i class="fas fa-eye password-toggle" id="toggleRegisterConfirmPassword"></i>
+                    </div>
+                    <div class="error-message" id="registerConfirmPasswordError"></div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span data-en="I agree to the Terms of Service" data-km="ខ្ញុំយល់ព្រមនឹងល័ក្ខខ័ណ្ឌសេវាកម្ម">ខ្ញុំយល់ព្រមនឹងល័ក្ខខ័ណ្ឌសេវាកម្ម</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="registerSubmit" data-en="Create Account" data-km="បង្កើតគណនី">បង្កើតគណនី</button>
+            </form>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="spinner"></div>
+                <p data-en="Processing..." data-km="កំពុងដំណើរការ...">កំពុងដំណើរការ...</p>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // Language Management
+        let currentLanguage = 'km'; // Default to Khmer
+
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            document.documentElement.lang = lang;
+            
+            // Update all elements with data attributes
+            document.querySelectorAll('[data-en], [data-km]').forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-en-placeholder], [data-km-placeholder]').forEach(element => {
+                const placeholder = element.getAttribute(`data-${lang}-placeholder`);
+                if (placeholder) {
+                    element.placeholder = placeholder;
+                }
+            });
+
+            // Update language toggle button
+            const toggleBtn = document.getElementById('languageToggle');
+            const toggleText = toggleBtn.querySelector('span');
+            toggleText.textContent = lang === 'en' ? 'ភាសាខ្មែរ' : 'English';
+
+            // Store preference
+            localStorage.setItem('angkor_language', lang);
+        }
+
+        // Load saved language preference
+        const savedLanguage = localStorage.getItem('angkor_language') || 'km';
+        updateLanguage(savedLanguage);
+
+        // Language toggle functionality
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            const newLang = currentLanguage === 'en' ? 'km' : 'en';
+            updateLanguage(newLang);
+        });
+
+        // Form Tab Management
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const authHeader = document.querySelector('.auth-header h1');
+        const authSubtext = document.querySelector('.auth-header p');
+
+        function showLoginForm() {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            
+            if (currentLanguage === 'en') {
+                authHeader.textContent = 'Sign In';
+                authSubtext.textContent = 'Enter your credentials to access your account';
+            } else {
+                authHeader.textContent = 'ចូលគណនី';
+                authSubtext.textContent = 'បញ្ចូលព័ត៌មានសម្គាល់របស់អ្នកដើម្បីចូលទៅកាន់គណនី';
+            }
+        }
+
+        function showRegisterForm() {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            
+            if (currentLanguage === 'en') {
+                authHeader.textContent = 'Create Account';
+                authSubtext.textContent = 'Join Angkor Compliance to manage your factory operations';
+            } else {
+                authHeader.textContent = 'បង្កើតគណនី';
+                authSubtext.textContent = 'ចូលរួមជាមួយ Angkor Compliance ដើម្បីគ្រប់គ្រងប្រតិបត្តិការរោងចក្រ';
+            }
+        }
+
+        loginTab.addEventListener('click', showLoginForm);
+        registerTab.addEventListener('click', showRegisterForm);
+
+        // Password Toggle Functionality
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
+            
+            toggle.addEventListener('click', () => {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    toggle.classList.remove('fa-eye');
+                    toggle.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    toggle.classList.remove('fa-eye-slash');
+                    toggle.classList.add('fa-eye');
+                }
+            });
+        }
+
+        setupPasswordToggle('toggleLoginPassword', 'loginPassword');
+        setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
+        setupPasswordToggle('toggleRegisterConfirmPassword', 'registerConfirmPassword');
+
+        // Form Validation
+        function validateEmail(email) {
+            const re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            return re.test(email) && !email.includes('..') && email.length <= 254;
+        }
+
+        function validatePassword(password) {
+            return password.length >= 8;
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function clearError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.style.display = 'none';
+        }
+
+        function clearAllErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.style.display = 'none';
+            });
+        }
+
+        // Loading State Management
+        function showLoading() {
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').classList.add('hidden');
+            if (loginTab.classList.contains('active')) {
+                document.getElementById('loginForm').classList.remove('hidden');
+            } else {
+                document.getElementById('registerForm').classList.remove('hidden');
+            }
+        }
+
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+            setTimeout(() => {
+                successElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Login Form Submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAllErrors();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Validation
+            if (!validateEmail(email)) {
+                showError('loginEmailError', currentLanguage === 'en' ? 'Please enter a valid email address' : 'សូមបញ្ចូលអាសយដ្ឋានអ៊ីមែលត្រឹមត្រូវ');
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                showError('loginPasswordError', currentLanguage === 'en' ? 'Password must be at least 8 characters' : 'ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់ 8 តួអក្សរ');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                console.log('Attempting login to:', '/api/auth/login');
+                
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password,
+                        remember: document.getElementById('rememberMe').checked
+                    }),
+                });
+
+                console.log('Login response status:', response.status);
+                console.log('Login response headers:', Object.fromEntries(response.headers.entries()));
+
+                let data;
+                try {
+                    data = await response.json();
+                    console.log('Login response data:', data);
+                } catch (parseError) {
+                    console.error('Failed to parse response JSON:', parseError);
+                    const responseText = await response.text();
+                    console.error('Raw response:', responseText);
+                    
+                    hideLoading();
+                    showError('loginPasswordError', currentLanguage === 'en' 
+                        ? 'Server error: Invalid response format' 
+                        : 'បញ្ហាម៉ាស៊ីនមេ: ទម្រង់ចម្លើយមិនត្រឹមត្រូវ');
+                    return;
+                }
+
+                if (response.ok) {
+                    showSuccess(currentLanguage === 'en' ? 'Login successful! Redirecting...' : 'ចូលគណនីបានជោគជ័យ! កំពុងបញ្ជូនបន្ត...');
+                    
+                    // Store authentication token
+                    localStorage.setItem('angkor_token', data.token);
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 2000);
+                } else {
+                    hideLoading();
+                    
+                    // Enhanced error handling with more specific messages
+                    let errorMessage = data.message || data.error || 'Unknown error';
+                    
+                    if (response.status === 404) {
+                        errorMessage = currentLanguage === 'en' 
+                            ? 'Login service not available. Please contact support.' 
+                            : 'សេវាកម្មចូលគណនីមិនអាចប្រើបាន។ សូមទាក់ទងផ្នែកជំនួយ។';
+                        
+                        // Log debug information for 404 errors
+                        console.error('404 Error Details:', {
+                            url: '/api/auth/login',
+                            status: response.status,
+                            data: data
+                        });
+                    } else if (response.status === 401) {
+                        errorMessage = currentLanguage === 'en' 
+                            ? 'Invalid email or password' 
+                            : 'អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ';
+                    } else if (response.status >= 500) {
+                        errorMessage = currentLanguage === 'en' 
+                            ? 'Server error. Please try again later.' 
+                            : 'បញ្ហាម៉ាស៊ីនមេ។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។';
+                    }
+                    
+                    showError('loginPasswordError', errorMessage);
+                }
+            } catch (error) {
+                console.error('Login network error:', error);
+                hideLoading();
+                
+                let errorMessage;
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    errorMessage = currentLanguage === 'en' 
+                        ? 'Cannot connect to server. Please check your internet connection.' 
+                        : 'មិនអាចតភ្ជាប់ទៅម៉ាស៊ីនមេ។ សូមពិនិត្យការតភ្ជាប់អ៊ីនធឺណិត។';
+                } else {
+                    errorMessage = currentLanguage === 'en' 
+                        ? 'Connection error. Please try again.' 
+                        : 'បញ្ហាការតភ្ជាប់។ សូមព្យាយាមម្តងទៀត។';
+                }
+                
+                showError('loginPasswordError', errorMessage);
+            }
+        });
+
+        // Register Form Submission
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearAllErrors();
+
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const company = document.getElementById('registerCompany').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+
+            // Validation
+            if (name.trim().length < 2) {
+                showError('registerNameError', currentLanguage === 'en' ? 'Name must be at least 2 characters' : 'ឈ្មោះត្រូវតែមានយ៉ាងហោចណាស់ 2 តួអក្សរ');
+                return;
+            }
+
+            if (!validateEmail(email)) {
+                showError('registerEmailError', currentLanguage === 'en' ? 'Please enter a valid email address' : 'សូមបញ្ចូលអាសយដ្ឋានអ៊ីមែលត្រឹមត្រូវ');
+                return;
+            }
+
+            if (company.trim().length < 2) {
+                showError('registerCompanyError', currentLanguage === 'en' ? 'Company name must be at least 2 characters' : 'ឈ្មោះក្រុមហ៊ុនត្រូវតែមានយ៉ាងហោចណាស់ 2 តួអក្សរ');
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                showError('registerPasswordError', currentLanguage === 'en' ? 'Password must be at least 8 characters' : 'ពាក្យសម្ងាត់ត្រូវតែមានយ៉ាងហោចណាស់ 8 តួអក្សរ');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('registerConfirmPasswordError', currentLanguage === 'en' ? 'Passwords do not match' : 'ពាក្យសម្ងាត់មិនត្រូវគ្នា');
+                return;
+            }
+
+            if (!agreeTerms) {
+                showError('registerConfirmPasswordError', currentLanguage === 'en' ? 'Please agree to the Terms of Service' : 'សូមយល់ព្រមនឹងល័ក្ខខ័ណ្ឌសេវាកម្ម');
+                return;
+            }
+
+            showLoading();
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        company,
+                        password
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showSuccess(currentLanguage === 'en' ? 'Registration successful! Please check your email for verification.' : 'ការចុះឈ្មោះបានជោគជ័យ! សូមពិនិត្យអ៊ីមែលសម្រាប់ការបញ្ជាក់។');
+                    
+                    // Switch to login form after successful registration
+                    setTimeout(() => {
+                        hideLoading();
+                        showLoginForm();
+                    }, 3000);
+                } else {
+                    hideLoading();
+                    if (data.field) {
+                        showError(`register${data.field.charAt(0).toUpperCase() + data.field.slice(1)}Error`, data.message);
+                    } else {
+                        showError('registerConfirmPasswordError', data.message || (currentLanguage === 'en' ? 'Registration failed. Please try again.' : 'ការចុះឈ្មោះបានបរាជ័យ។ សូមព្យាយាមម្តងទៀត។'));
+                    }
+                }
+            } catch (error) {
+                hideLoading();
+                showError('registerConfirmPasswordError', currentLanguage === 'en' ? 'Connection error. Please try again.' : 'បញ្ហាការតភ្ជាប់។ សូមព្យាយាមម្តងទៀត។');
+            }
+        });
+
+        // Social Login Handlers
+        document.getElementById('googleLogin').addEventListener('click', () => {
+            window.location.href = '/api/auth/google';
+        });
+
+        document.getElementById('microsoftLogin').addEventListener('click', () => {
+            window.location.href = '/api/auth/microsoft';
+        });
+
+        // Check if user is already logged in
+        const token = localStorage.getItem('angkor_token');
+        if (token) {
+            // Validate token and redirect if valid
+            fetch('/api/auth/validate', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.valid) {
+                    window.location.href = '/dashboard.html';
+                } else {
+                    localStorage.removeItem('angkor_token');
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem('angkor_token');
+            });
+        }
+
+        // Analytics
+        function trackEvent(eventName, properties = {}) {
+            if (window.gtag) {
+                gtag('event', eventName, properties);
+            }
+        }
+
+        // Track form interactions
+        document.getElementById('loginForm').addEventListener('submit', () => {
+            trackEvent('login_attempt', { method: 'email' });
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', () => {
+            trackEvent('register_attempt', { method: 'email' });
+        });
+
+        document.getElementById('googleLogin').addEventListener('click', () => {
+            trackEvent('login_attempt', { method: 'google' });
+        });
+
+        document.getElementById('microsoftLogin').addEventListener('click', () => {
+            trackEvent('login_attempt', { method: 'microsoft' });
+        });
+
+        // Track language switches
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            trackEvent('language_switch', { 
+                from: currentLanguage, 
+                to: currentLanguage === 'en' ? 'km' : 'en' 
+            });
+        });
+    </script>
+</body>
+</html> 
