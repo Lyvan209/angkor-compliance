@@ -13,15 +13,15 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/api/^(.*^)",
       "dest": "/server.js"
     },
     {
-      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|ico|svg))",
+      "src": "/^(.*\\.(css^|js^|png^|jpg^|jpeg^|gif^|ico^|svg^)^)",
       "dest": "/$1"
     },
     {
-      "src": "/(.*)",
+      "src": "/^(.*^)",
       "dest": "/index.html"
     }
   ],
@@ -35,7 +35,7 @@
   },
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/^(^(?!api/^).*^)",
       "destination": "/index.html"
     }
   ]

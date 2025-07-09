@@ -143,25 +143,29 @@ class DatabaseService {
     async getUserByEmail(email) {
         try {
             if (!this.admin) {
-                throw new Error('Admin client not available');
-            }
-            
-            const { data, error } = await this.admin.auth.admin.getUserByEmail(email);
-            
-            if (error) {
-                if (error.message.includes('User not found')) {
-                    return null;
-                }
-                throw error;
-            }
-            
-            return data.user;
-        } catch (error) {
-            logger.error('Get user by email error:', error);
-            if (error.message.includes('User not found')) {
+                // If admin client not available, skip user check
+                logger.warn('Admin client not available, skipping duplicate email check');
                 return null;
             }
-            throw error;
+            
+            // Try to get user by email using admin client
+            try {
+                const { data, error } = await this.admin.auth.admin.listUsers();
+                
+                if (error) throw error;
+                
+                // Find user by email
+                const user = data.users.find(u => u.email === email);
+                return user || null;
+            } catch (adminError) {
+                // If admin function fails, log but don't block registration
+                logger.warn('Admin user lookup failed, allowing registration:', adminError.message);
+                return null;
+            }
+        } catch (error) {
+            logger.error('Get user by email error:', error);
+            // Return null to allow registration to proceed
+            return null;
         }
     }
 

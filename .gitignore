@@ -112,4 +112,7 @@ deploy.bat
 
 # Database backups (if any)
 *.sql.backup
-*.db.backup 
+*.db.backup .env.secure 
+*.backup 
+.env.secure 
+*.backup 
