@@ -3,8 +3,8 @@
  * Comprehensive validation for all API endpoints
  */
 
-const validator = require('validator');
-const { body, validationResult } = require('express-validator');
+import validator from 'validator';
+import { body, validationResult } from 'express-validator';
 
 // SECURITY: Input sanitization function
 function sanitizeInput(value) {
@@ -241,7 +241,7 @@ function preventXSS(req, res, next) {
     next();
 }
 
-module.exports = {
+export {
     sanitizeInput,
     sanitizeRequestBody,
     handleValidationErrors,

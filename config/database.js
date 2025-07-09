@@ -3,9 +3,11 @@
  * Handles database connections, authentication, and real-time features
  */
 
-const { createClient } = require('@supabase/supabase-js');
-const winston = require('winston');
-require('dotenv').config();
+import { createClient } from '@supabase/supabase-js';
+import winston from 'winston';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Configure logger
 const logger = winston.createLogger({
@@ -27,12 +29,6 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // SECURITY FIX: Enhanced environment variable validation
 if (!supabaseUrl || !supabaseAnonKey) {
-    if (process.env.NODE_ENV === 'test' || process.argv.includes('--syntax-check')) {
-        console.warn('⚠️ Supabase configuration missing - running in test mode');
-        module.exports = { databaseService: null, supabaseClient: null };
-        return;
-    }
-    
     logger.error('❌ CRITICAL: Missing required environment variables:');
     if (!supabaseUrl) logger.error('  - SUPABASE_URL');
     if (!supabaseAnonKey) logger.error('  - SUPABASE_ANON_KEY');
@@ -454,21 +450,21 @@ class DatabaseService {
     // Audit Logging
     async logAction(userId, action, details = {}) {
         try {
-            const { data, error } = await this.client
-                .from(TABLES.AUDIT_LOGS)
-                .insert({
-                    user_id: userId,
-                    action,
-                    details,
-                    ip_address: details.ip || null,
-                    user_agent: details.userAgent || null,
-                    created_at: new Date().toISOString()
-                });
-            
-            if (error) throw error;
-            
-            logger.info('Action logged', { userId, action });
-            return data;
+                    const { error } = await this.client
+            .from(TABLES.AUDIT_LOGS)
+            .insert({
+                user_id: userId,
+                action,
+                details,
+                ip_address: details.ip || null,
+                user_agent: details.userAgent || null,
+                created_at: new Date().toISOString()
+            });
+        
+        if (error) throw error;
+        
+        logger.info('Action logged', { userId, action });
+        return true;
         } catch (error) {
             logger.error('Log action error:', error);
             throw error;
@@ -527,7 +523,7 @@ class DatabaseService {
 // Create singleton instance
 const databaseService = new DatabaseService();
 
-module.exports = {
+export {
     supabaseClient,
     supabaseAdmin,
     databaseService,

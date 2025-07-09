@@ -360,8 +360,8 @@ const Analytics = {
             console.log('Analytics Event:', eventName, data);
             
             // Example: Send to Google Analytics
-            if (typeof gtag !== 'undefined') {
-                gtag('event', eventName, data);
+            if (typeof window.gtag !== 'undefined') {
+                window.gtag('event', eventName, data);
             }
             
             // Example: Send to custom analytics endpoint

@@ -1,11 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const { createClient } = require('@supabase/supabase-js');
-const serverless = require('serverless-http');
-const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import { createClient } from '@supabase/supabase-js';
+import serverless from 'serverless-http';
+import jwt from 'jsonwebtoken';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -604,7 +604,7 @@ app.post('/api/analytics', async (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
     console.error('Unhandled error:', err);
     res.status(500).json({ 
         error: 'Internal server error',
@@ -621,4 +621,4 @@ app.use((req, res) => {
 });
 
 // Export serverless function handler
-module.exports.handler = serverless(app); 
+export const handler = serverless(app); 

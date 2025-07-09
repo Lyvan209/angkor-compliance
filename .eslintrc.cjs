@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: { browser: true, es2020: true, node: true },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -16,5 +16,17 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'no-undef': ['error', { typeof: true }],
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
   },
+  overrides: [
+    {
+      files: ['netlify/functions/**/*.js', 'server.js', 'config/**/*.js', 'routes/**/*.js', 'middleware/**/*.js', 'scripts/**/*.js'],
+      env: { node: true, es2020: true },
+      rules: {
+        'no-undef': 'off',
+        'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      }
+    }
+  ]
 } 

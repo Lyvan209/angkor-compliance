@@ -3,10 +3,11 @@
  * Additional API endpoints for the landing page
  */
 
-const express = require('express');
+import express from 'express';
+import rateLimit from 'express-rate-limit';
+import winston from 'winston';
+
 const router = express.Router();
-const rateLimit = require('express-rate-limit');
-const winston = require('winston');
 
 // Configure logger
 const logger = winston.createLogger({
@@ -673,4 +674,4 @@ router.post('/analytics', (req, res) => {
     }
 });
 
-module.exports = router; 
+export default router; 

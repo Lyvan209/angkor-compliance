@@ -85,7 +85,7 @@ async function main() {
         const cleanupSql = fs.readFileSync(cleanupSqlPath, 'utf8');
         
         // Execute SQL safely through secure method
-        const { data: cleanupData, error: cleanupError } = await executeSqlSecurely(supabase, cleanupSql, 'cleanup');
+        const { error: cleanupError } = await executeSqlSecurely(supabase, cleanupSql, 'cleanup');
 
         if (cleanupError) {
             // Try direct query method if RPC fails

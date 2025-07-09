@@ -1,5 +1,5 @@
-const { createClient } = require('@supabase/supabase-js');
-const jwt = require('jsonwebtoken');
+import { createClient } from '@supabase/supabase-js';
+import jwt from 'jsonwebtoken';
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -21,7 +21,7 @@ function generateAccessToken(user) {
     );
 }
 
-exports.handler = async (event, context) => {
+export const handler = async (event, _context) => {
     // Enhanced CORS headers
     const headers = {
         'Access-Control-Allow-Origin': '*',
@@ -85,7 +85,7 @@ exports.handler = async (event, context) => {
         if (path === '/login' && method === 'POST') {
             console.log('Processing login request');
             
-            const { email, password, remember } = body;
+            const { email, password } = body;
             
             if (!email || !password) {
                 return {

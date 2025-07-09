@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Netlify Functions for Angkor Compliance Authentication",
   "main": "auth.js",
+  "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "jsonwebtoken": "^9.0.2"

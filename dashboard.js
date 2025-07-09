@@ -656,8 +656,8 @@ const DashboardApp = {
             console.log('Analytics:', event, data);
             
             // In production, send to analytics service
-            if (typeof gtag !== 'undefined') {
-                gtag('event', event, data);
+            if (typeof window.gtag !== 'undefined') {
+                window.gtag('event', event, data);
             }
             
             // Send to backend analytics

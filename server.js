@@ -3,30 +3,31 @@
  * Production-ready Express server with Supabase integration, analytics, security, and static file serving
  */
 
-const express = require('express');
-const helmet = require('helmet');
-const compression = require('compression');
-const cors = require('cors');
-const rateLimit = require('express-rate-limit');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const path = require('path');
-const fs = require('fs');
-const nodemailer = require('nodemailer');
-const winston = require('winston');
-const cron = require('node-cron');
-const { databaseService, supabaseClient } = require('./config/database');
+import express from 'express';
+import helmet from 'helmet';
+import compression from 'compression';
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import path from 'path';
+import fs from 'fs';
+import nodemailer from 'nodemailer';
+import winston from 'winston';
+import cron from 'node-cron';
+import { databaseService, supabaseClient } from './config/database.js';
 
 // SECURITY FIX: Import validation middleware
-const {
+import {
     sanitizeRequestBody,
     validateRequestHeaders,
     validateQueryParams,
     preventXSS,
     authValidation
-} = require('./middleware/validation');
+} from './middleware/validation.js';
 
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Initialize Express app
 const app = express();
@@ -164,10 +165,11 @@ app.use(express.static('.', {
 }));
 
 // API Routes
-app.use('/api', require('./routes/api'));
+import apiRoutes from './routes/api.js';
+app.use('/api', apiRoutes);
 
 // Authentication endpoints
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 // JWT helper functions - SECURITY FIX: No hardcoded fallbacks
 if (!process.env.JWT_SECRET) {
