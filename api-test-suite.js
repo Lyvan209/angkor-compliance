@@ -8,64 +8,6 @@
 // Mock environment variables for testing
 process.env.NODE_ENV = 'test';
 
-// Create a simple mock for the supabase client
-const mockSupabase = {
-  auth: {
-    signInWithPassword: jest.fn(),
-    signUp: jest.fn(),
-    signOut: jest.fn(),
-    getUser: jest.fn(),
-    resetPasswordForEmail: jest.fn(),
-    getSession: jest.fn(),
-    onAuthStateChange: jest.fn()
-  },
-  from: jest.fn(() => ({
-    select: jest.fn(() => ({
-      eq: jest.fn(() => ({
-        order: jest.fn(() => ({
-          data: [],
-          error: null
-        })),
-        single: jest.fn(() => ({
-          data: null,
-          error: null
-        }))
-      }))
-    })),
-    insert: jest.fn(() => ({
-      select: jest.fn(() => ({
-        data: [],
-        error: null
-      }))
-    })),
-    update: jest.fn(() => ({
-      eq: jest.fn(() => ({
-        select: jest.fn(() => ({
-          data: [],
-          error: null
-        }))
-      }))
-    })),
-    delete: jest.fn(() => ({
-      eq: jest.fn(() => ({
-        data: [],
-        error: null
-      }))
-    }))
-  })),
-  storage: {
-    from: jest.fn(() => ({
-      upload: jest.fn(() => ({
-        data: { path: 'test-path' },
-        error: null
-      })),
-      getPublicUrl: jest.fn(() => ({
-        data: { publicUrl: 'https://test-url.com' }
-      }))
-    }))
-  }
-};
-
 // Test configuration
 const testConfig = {
   timeout: 30000,
@@ -647,7 +589,7 @@ const errorHandlingTests = {
 // Main test runner
 async function runAllTests() {
   console.log('🚀 Starting Angkor Compliance API Test Suite...\n');
-  console.log('=' * 50);
+  console.log('='.repeat(50));
 
   try {
     // Core API Tests
@@ -678,9 +620,9 @@ async function runAllTests() {
   }
 
   // Print results
-  console.log('\n' + '=' * 50);
+  console.log('\n' + '='.repeat(50));
   console.log('🎯 TEST RESULTS SUMMARY');
-  console.log('=' * 50);
+  console.log('='.repeat(50));
   console.log(`✅ Passed: ${testResults.passed}`);
   console.log(`❌ Failed: ${testResults.failed}`);
   console.log(`📊 Total: ${testResults.passed + testResults.failed}`);
