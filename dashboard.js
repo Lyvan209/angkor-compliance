@@ -21,19 +21,10 @@ const DashboardApp = {
 
     // Check if user is authenticated
     async checkAuthentication() {
-        const token = this.getAuthToken();
-        if (!token) {
-            this.redirectToLogin();
-            return;
-        }
-
         try {
             const response = await fetch('/api/auth/validate', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
+                method: 'GET',
+                credentials: 'include' // Include cookies
             });
 
             if (response.ok) {
@@ -56,18 +47,9 @@ const DashboardApp = {
 
     // Get authentication token
     getAuthToken() {
-        // Check URL params first (for OAuth redirects)
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlToken = urlParams.get('token');
-        if (urlToken) {
-            localStorage.setItem('authToken', urlToken);
-            // Clean up URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-            return urlToken;
-        }
-
-        // Check localStorage
-        return localStorage.getItem('authToken');
+        // Authentication is now handled via httpOnly cookies
+        // No need to return token - server validates session automatically
+        return null;
     },
 
     // Redirect to login page
@@ -183,22 +165,13 @@ const DashboardApp = {
     // Logout user
     async logout() {
         try {
-            const token = this.getAuthToken();
-            if (token) {
-                await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-            }
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+                credentials: 'include' // Include cookies
+            });
         } catch (error) {
             console.error('Logout error:', error);
         }
-
-        // Clear local storage
-        localStorage.removeItem('authToken');
         
         // Track analytics
         this.trackAnalytics('user_logout', { user_id: this.currentUser?.id });
@@ -213,12 +186,8 @@ const DashboardApp = {
         this.showLoadingState();
 
         try {
-            const token = this.getAuthToken();
             const response = await fetch('/api/dashboard/overview', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
+                credentials: 'include' // Include cookies
             });
 
             if (response.ok) {

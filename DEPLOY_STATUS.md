@@ -37,8 +37,8 @@
 
 2. **Set Environment Variables in Netlify:**
    ```
-   VITE_SUPABASE_URL=https://zubdmedwbqjxvzsucsah.supabase.co
-   VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1YmRtZWR3YnFqeHZ6c3Vjc2FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMDY4MTIsImV4cCI6MjA2NzU4MjgxMn0.nqH0OreeVQDZ_TLwCGPcwJEasWOnt2YVyiKOZUu0y2s
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key-here
    ```
 
 ### 📋 Quick Deploy Commands:
