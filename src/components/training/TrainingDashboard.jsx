@@ -8,17 +8,17 @@ import {
   Award,
   TrendingUp,
   BarChart3,
-  FileText,
-  Settings,
+  ,
+  ,
   RefreshCw,
   ArrowRight,
   Calendar,
-  Clock,
+  ,
   Star,
   Layers,
-  Monitor,
-  Smartphone,
-  Globe
+  ,
+  ,
+  
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useTranslations } from '../../translations'

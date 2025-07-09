@@ -7,7 +7,7 @@ import {
   AlertTriangle,
   Calendar,
   Plus,
-  Filter,
+  ,
   TrendingUp
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'

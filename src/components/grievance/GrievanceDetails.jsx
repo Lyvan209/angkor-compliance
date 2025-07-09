@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { 
   MessageSquare, 
   AlertTriangle, 
-  Clock, 
+  , 
   CheckCircle,
   User,
   Calendar,
   FileText,
-  Eye,
-  Edit,
+  ,
+  ,
   UserCheck,
   Users,
   Phone,
@@ -25,7 +25,7 @@ import {
   History,
   Shield,
   TrendingUp,
-  ChevronRight,
+  ,
   ChevronDown,
   Activity
 } from 'lucide-react'

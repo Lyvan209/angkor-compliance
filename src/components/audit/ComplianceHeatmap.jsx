@@ -9,7 +9,7 @@ import {
   Calendar,
   MapPin,
   Building,
-  Users,
+  ,
   BarChart3,
   RefreshCw
 } from 'lucide-react'

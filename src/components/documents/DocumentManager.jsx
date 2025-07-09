@@ -8,23 +8,23 @@ import {
   Filter, 
   Download,
   Eye,
-  Edit,
+  ,
   Trash2,
   Share2,
   Clock,
-  Tag,
-  Users,
-  Star,
+  ,
+  ,
+  ,
   Grid,
   List,
   Plus,
   MoreVertical,
   CheckSquare,
   Square,
-  Calendar,
+  ,
   User,
-  FolderOpen,
-  X
+  ,
+  
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useTranslations } from '../../translations'

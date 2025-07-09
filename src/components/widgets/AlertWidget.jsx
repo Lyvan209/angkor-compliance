@@ -182,8 +182,22 @@ const AlertWidget = memo(({
 })
 
 AlertWidget.propTypes = {
-  alerts: PropTypes.array,
-  onDismiss: PropTypes.func.isRequired
+  alerts: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    type: PropTypes.oneOf(['error', 'critical', 'warning', 'success', 'info']).isRequired,
+    title: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
+    timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    action: PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired
+    })
+  })).isRequired,
+  title: PropTypes.string,
+  maxItems: PropTypes.number,
+  onDismiss: PropTypes.func,
+  onViewAll: PropTypes.func,
+  loading: PropTypes.bool
 }
 
 AlertWidget.displayName = 'AlertWidget'

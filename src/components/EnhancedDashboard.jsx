@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { 
   LogOut, 
   User, 
-  Settings, 
+  , 
   BarChart3, 
   FileText, 
   Shield, 

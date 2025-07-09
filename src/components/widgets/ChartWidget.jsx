@@ -1,4 +1,4 @@
-import { BarChart3, TrendingUp, MoreHorizontal, Calendar, Filter } from 'lucide-react'
+import { BarChart3, TrendingUp, MoreHorizontal, ,  } from 'lucide-react'
 import { useLanguageStyles } from '../../hooks/useLanguageStyles'
 import PropTypes from 'prop-types'
 import { memo } from 'react'
@@ -216,9 +216,16 @@ const ChartWidget = memo(({
 
 ChartWidget.propTypes = {
   title: PropTypes.string.isRequired,
-  data: PropTypes.array,
+  subtitle: PropTypes.string,
+  data: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired
+  })).isRequired,
   type: PropTypes.oneOf(['bar', 'line', 'pie']),
-  height: PropTypes.number
+  height: PropTypes.string,
+  showLegend: PropTypes.bool,
+  onMoreClick: PropTypes.func,
+  loading: PropTypes.bool
 }
 
 ChartWidget.displayName = 'ChartWidget'

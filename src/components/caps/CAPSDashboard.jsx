@@ -3,11 +3,11 @@ import {
   Target, 
   TrendingUp, 
   Users, 
-  Calendar,
+  ,
   Plus,
   BarChart3,
   CheckCircle,
-  Clock,
+  ,
   AlertTriangle
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'

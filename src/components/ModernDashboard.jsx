@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { 
   LogOut, 
   User, 
-  Settings, 
+  , 
   BarChart3, 
   FileText, 
   Shield, 
@@ -12,7 +12,7 @@ import {
   MessageSquare,
   AlertTriangle,
   CheckCircle,
-  Clock,
+  ,
   TrendingUp,
   Building,
   Plus,

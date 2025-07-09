@@ -15,15 +15,15 @@ import {
   FileText,
   Shield,
   Calendar,
-  Mail,
-  MessageSquare,
-  Phone,
+  ,
+  ,
+  ,
   Eye,
-  EyeOff,
-  Archive,
+  ,
+  ,
   Trash2,
   Plus,
-  Send
+  
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useTranslations } from '../../translations'

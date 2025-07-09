@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import { Clock, User, FileText, CheckCircle, MessageSquare, Calendar, ArrowRight } from 'lucide-react'
 import { useLanguageStyles } from '../../hooks/useLanguageStyles'
 
@@ -194,6 +195,26 @@ const ActivityWidget = ({
       )}
     </div>
   )
+}
+
+ActivityWidget.propTypes = {
+  activities: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    type: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    user: PropTypes.string,
+    timestamp: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]).isRequired,
+    status: PropTypes.string,
+    link: PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired
+    })
+  })).isRequired,
+  title: PropTypes.string,
+  maxItems: PropTypes.number,
+  onViewAll: PropTypes.func,
+  loading: PropTypes.bool
 }
 
 export default ActivityWidget 

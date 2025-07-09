@@ -16,6 +16,48 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 })
 
+// Audit logging function
+const logAuditEvent = async (userId, action, table, recordId, oldData, newData, organizationId) => {
+  try {
+    const auditData = {
+      user_id: userId,
+      action: action,
+      table_name: table,
+      record_id: recordId,
+      old_data: oldData ? JSON.stringify(oldData) : null,
+      new_data: newData ? JSON.stringify(newData) : null,
+      organization_id: organizationId,
+      timestamp: new Date().toISOString()
+    }
+
+    const { error } = await supabase
+      .from('audit_logs')
+      .insert(auditData)
+
+    if (error) {
+      console.error('Audit logging error:', error)
+    }
+  } catch (error) {
+    console.error('Audit logging failed:', error)
+  }
+}
+
+// Missing function definitions
+const getPermitsByOrganization = async (organizationId) => {
+  try {
+    const { data, error } = await supabase
+      .from('permits')
+      .select('*')
+      .eq('organization_id', organizationId)
+    
+    if (error) throw error
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error fetching permits:', error)
+    return { success: false, error: error.message }
+  }
+}
+
 // Auth helper functions
 export const signIn = async (email, password) => {
   console.log('Attempting to sign in with:', email)

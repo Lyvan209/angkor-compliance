@@ -9,7 +9,7 @@ import {
   TrendingDown,
   Calendar,
   Bell,
-  Settings,
+  ,
   Plus,
   Eye,
   BarChart3,

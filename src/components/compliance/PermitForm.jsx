@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { 
   Save, 
-  X, 
+  , 
   Upload, 
-  Calendar, 
+  , 
   FileText, 
   AlertTriangle,
   CheckCircle,
   Building,
   User,
-  Globe
+  
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useTranslations } from '../../translations'

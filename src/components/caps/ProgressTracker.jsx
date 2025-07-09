@@ -8,9 +8,9 @@ import {
   PlayCircle,
   PauseCircle,
   BarChart3,
-  Calendar,
+  ,
   Bell,
-  Filter,
+  ,
   RefreshCw,
   Download,
   Target,
@@ -18,7 +18,7 @@ import {
   ArrowRight,
   Timer,
   User,
-  FileText
+  
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useTranslations } from '../../translations'

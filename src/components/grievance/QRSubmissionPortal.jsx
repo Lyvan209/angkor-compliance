@@ -9,15 +9,15 @@ import {
   Send, 
   CheckCircle, 
   Eye, 
-  EyeOff, 
+  , 
   Phone, 
-  Mail, 
+  , 
   MapPin, 
-  Calendar, 
+  , 
   FileText,
   X,
   ArrowLeft,
-  Info,
+  ,
   Shield,
   Users,
   TrendingUp,
@@ -26,7 +26,7 @@ import {
   Smartphone,
   Wifi,
   WifiOff,
-  RefreshCw
+  
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useTranslations } from '../../translations'

@@ -11,13 +11,13 @@ import {
   Lightbulb,
   Shield,
   Zap,
-  Eye,
-  RefreshCw,
+  ,
+  ,
   Download,
-  Filter,
+  ,
   ArrowRight,
-  Star,
-  Users
+  ,
+  
 } from 'lucide-react'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useTranslations } from '../../translations'
